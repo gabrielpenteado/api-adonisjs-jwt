@@ -39,13 +39,47 @@ export default class UsersController {
     }
   }
 
-  async destroy({ params }: HttpContext) {
+  async update({ request, response, params, auth }: HttpContext) {
+    const fullName = request.input('username')
+    const email = request.input('email')
+    const password = request.input('password')
+
     const user = await User.findOrFail(params.id)
+    const userLoggedId = auth.user?.id
+
+    if (userLoggedId !== Number(params.id)) {
+      response.status(401)
+      return {
+        msg: 'You can not update this user!',
+      }
+    }
+
+    user.fullName = fullName
+    user.email = email
+    user.password = password
+
+    await user.save()
+
+    return {
+      message: 'User successfully updated!',
+      data: user,
+    }
+  }
+
+  async destroy({ params, auth }: HttpContext) {
+    const user = await User.findOrFail(params.id)
+    const userLoggedId = auth.user?.id
+
+    if (userLoggedId !== Number(params.id)) {
+      return {
+        msg: "You can't delete this user",
+      }
+    }
 
     await user.delete()
 
     return {
-      msg: 'Moment successfully deleted!',
+      msg: 'User successfully deleted!',
       data: user,
     }
   }

@@ -35,7 +35,7 @@ router
 
     //router.post('moments', 'moments_controller.store')
     router
-      .resource('/moments', MomentsController)
+      .resource('moments', MomentsController)
       .apiOnly()
       .use(
         '*',
@@ -45,7 +45,7 @@ router
       )
 
     router
-      .resource('/comments', CommentsController)
+      .resource('moments.comments', CommentsController)
       .apiOnly()
       .use(
         '*',
