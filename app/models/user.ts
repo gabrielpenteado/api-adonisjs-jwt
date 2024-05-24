@@ -8,7 +8,7 @@ import Moment from './moment.js'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import Comment from './comment.js'
 
-const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
+const AuthFinder = withAuthFinder(() => hash.use('argon'), {
   uids: ['email'],
   passwordColumnName: 'password',
 })
@@ -38,7 +38,14 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 
+  // @beforeSave()
+  // static async hashPassword(user: User) {
+  //   if (user.$dirty.password) {
+  //     user.password = await hash.make(user.password)
+  //   }
+  // }
+
   static accessTokens = DbAccessTokensProvider.forModel(User, {
-    expiresIn: 300,
+    expiresIn: 3600,
   })
 }

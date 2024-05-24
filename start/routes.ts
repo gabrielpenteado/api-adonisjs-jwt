@@ -8,7 +8,10 @@
 */
 
 import router from '@adonisjs/core/services/router'
-// import { middleware } from './kernel.js'
+import { middleware } from './kernel.js'
+
+const SessionController = () => import('#controllers/session_controller')
+const UsersController = () => import('#controllers/users_controller')
 const MomentsController = () => import('#controllers/moments_controller')
 const CommentsController = () => import('#controllers/comments_controller')
 
@@ -18,16 +21,37 @@ router
       return { hello: 'world' }
     })
 
-    //router.post('moments', 'moments_controller.store)
+    router.post('users/session', [SessionController, 'store'])
 
-    router.resource('/moments', MomentsController).apiOnly()
-    // .use(
-    //   '*',
-    //   middleware.auth({
-    //     guards: ['api'],
-    //   })
-    // )
+    router
+      .resource('users', UsersController)
+      .apiOnly()
+      .use(
+        ['index', 'show', 'update', 'destroy'],
+        middleware.auth({
+          guards: ['api'],
+        })
+      )
 
-    router.resource('/comments', CommentsController).apiOnly()
+    //router.post('moments', 'moments_controller.store')
+    router
+      .resource('/moments', MomentsController)
+      .apiOnly()
+      .use(
+        '*',
+        middleware.auth({
+          guards: ['api'],
+        })
+      )
+
+    router
+      .resource('/comments', CommentsController)
+      .apiOnly()
+      .use(
+        '*',
+        middleware.auth({
+          guards: ['api'],
+        })
+      )
   })
   .prefix('/api')
