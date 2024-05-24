@@ -7,8 +7,10 @@ export default class SessionController {
 
     const user = await User.verifyCredentials(email, password)
 
-    const token = await User.accessTokens.create(user)
+    // console.log(user)
 
+    const token = await User.accessTokens.create(user)
+    // response.redirect('/api')
     return token
   }
 }

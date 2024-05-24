@@ -1,5 +1,6 @@
 import Comment from '#models/comment'
 import Moment from '#models/moment'
+import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class CommentsController {
@@ -19,9 +20,34 @@ export default class CommentsController {
     }
   }
 
-  async update({ request, response, params }: HttpContext) {
+  // async update({ request, response, params, auth }: HttpContext) {
+  //   const body = request.body()
+
+  //   const userId = auth.user?.id
+  //   const comment = await Comment.findOrFail(params.id)
+
+  //   if (userId !== comment.userId) {
+  //     return { msg: 'errorrr' }
+  //   }
+
+  //   comment.text = body.text
+
+  //   await comment.save()
+
+  //   response.status(201)
+
+  //   return {
+  //     message: 'Comment succesfully updated.',
+  //     data: comment,
+  //   }
+  // }
+
+  async update({ request, response, params, auth }: HttpContext) {
     const body = request.body()
     const momentId = params.id
+
+    const userId = auth.user?.id
+    body.userId = userId
 
     await Moment.findOrFail(momentId)
     body.momentId = momentId
@@ -31,7 +57,27 @@ export default class CommentsController {
     response.status(201)
 
     return {
-      message: 'Comment succesfully created or updated.',
+      message: 'Comment succesfully updated/created.',
+      data: comment,
+    }
+  }
+
+  async destroy({ params, auth, response }: HttpContext) {
+    const comment = await Comment.findOrFail(params.id)
+
+    const userId = auth.user?.id
+
+    if (userId !== comment.userId) {
+      response.status(401)
+      return {
+        message: 'You can not delete this comment!',
+      }
+    }
+
+    await comment.delete()
+
+    return {
+      msg: 'Moment successfully deleted!',
       data: comment,
     }
   }

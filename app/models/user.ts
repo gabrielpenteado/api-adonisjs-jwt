@@ -38,13 +38,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 
-  // @beforeSave()
-  // static async hashPassword(user: User) {
-  //   if (user.$dirty.password) {
-  //     user.password = await hash.make(user.password)
-  //   }
-  // }
-
   static accessTokens = DbAccessTokensProvider.forModel(User, {
     expiresIn: 3600,
   })

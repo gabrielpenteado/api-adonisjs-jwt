@@ -30,7 +30,7 @@ export default class MomentsController {
     }
   }
 
-  async store({ request, response }: HttpContext) {
+  async store({ request, response, auth }: HttpContext) {
     const body = request.body()
 
     const image = request.file('image', this.validationOptions)
@@ -43,6 +43,9 @@ export default class MomentsController {
       body.image = imageName
     }
 
+    const userId = auth.user?.id
+    body.userId = userId
+
     const moment = await Moment.create(body)
 
     response.status(201)
@@ -53,8 +56,17 @@ export default class MomentsController {
     }
   }
 
-  async destroy({ params }: HttpContext) {
+  async destroy({ params, auth, response }: HttpContext) {
     const moment = await Moment.findOrFail(params.id)
+
+    const userId = auth.user?.id
+
+    if (userId !== moment.userId) {
+      response.status(401)
+      return {
+        message: 'You can not delete this moment!',
+      }
+    }
 
     await moment.delete()
 
@@ -64,10 +76,19 @@ export default class MomentsController {
     }
   }
 
-  async update({ request, params }: HttpContext) {
+  async update({ request, response, params, auth }: HttpContext) {
     const body = request.body()
 
+    const userId = auth.user?.id
+
     const moment = await Moment.findOrFail(params.id)
+
+    if (userId !== moment.userId) {
+      response.status(401)
+      return {
+        message: "You can't update this moment!",
+      }
+    }
 
     moment.title = body.title
     moment.description = body.description
