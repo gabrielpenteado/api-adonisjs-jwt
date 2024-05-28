@@ -10,6 +10,9 @@
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 
+import AutoSwagger from 'adonis-autoswagger'
+import swagger from '#config/swagger'
+
 const SessionController = () => import('#controllers/session_controller')
 const UsersController = () => import('#controllers/users_controller')
 const MomentsController = () => import('#controllers/moments_controller')
@@ -55,3 +58,15 @@ router
       )
   })
   .prefix('/api')
+
+// returns swagger in YAML
+router.get('/swagger', async () => {
+  return AutoSwagger.default.docs(router.toJSON(), swagger)
+})
+
+// Renders Swagger-UI and passes YAML-output of /swagger
+router.get('/docs', async () => {
+  return AutoSwagger.default.ui('/swagger', swagger)
+  // return AutoSwagger.default.scalar("/swagger", swagger); to use Scalar instead
+  // return AutoSwagger.default.rapidoc("/swagger", swagger); to use RapiDoc instead
+})

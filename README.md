@@ -14,6 +14,10 @@
 
 <br>
 
+<p align="center">
+    <img src="https://raw.githubusercontent.com/gabrielpenteado/api-adonisjs-jwt/main/swagger.png"> 
+</p>
+
 ### Build with
 
 ![AdonisJS Badge](https://img.shields.io/badge/AdonisJS-5A45FF?logo=adonisjs&logoColor=fff&style=for-the-badge)
