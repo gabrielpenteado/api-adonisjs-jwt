@@ -29,13 +29,23 @@
 ### Instalattion
 
 1. Clone the repository.<br>
-   `git clone https://github.com/gabrielpenteado/api-java-springboot-docker`
+   `git clone https://github.com/gabrielpenteado/api-adonisjs-jwt.git`
 
-2. Create a PostgreSQL database Docker container.<br>
-   `docker compose up -d`
+2. Install dependencies.<br>
+   `npm install`
 
-3. Run Application.<br>
-   `mvn spring-boot:run`
+3. Run migrations.<br>
+   `node ace migration:run`
+
+4. Generate a new key.<br>
+   `node ace generate:key`
+
+5. Write the new key to **APP_KEY** inside **_.env.example_** and rename it to **_.env_**<br>
+
+6. Replace all other fields into **_.env_** file with the appropriate values corresponding to your database configuration.<br>
+
+7. Run Application.<br>
+   `node ace serve`
    <br>
 
 ## 🤝 Contributions
@@ -45,7 +55,7 @@ The foundation of the open source community are the contributions, them inspire 
 
 ## 📄 License
 
-This project is licensed under the MIT License. See the [LICENSE.md](https://github.com/gabrielpenteado/api-java-springboot-docker/blob/main/LICENSE.md) file for details.
+This project is licensed under the MIT License. See the [LICENSE.md](https://github.com/gabrielpenteado/api-adonisjs-jwt/blob/main/LICENSE.md) file for details.
 <br>
 <br>
 
